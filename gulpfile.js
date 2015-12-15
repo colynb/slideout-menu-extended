@@ -20,15 +20,16 @@ function loadJson(file, cb) {
 }
 
 // Static Server + watching scss/html files
-gulp.task('serve', ['sass', 'jade'], function() {
+gulp.task('serve', ['sass', 'jade', 'js'], function() {
 
   browserSync.init({
     server: "./public"
   });
 
-  gulp.watch("./src/sass/*.sass", ['sass']);
+  gulp.watch("./src/sass/**/*.sass", ['sass']);
   gulp.watch("./src/**/*.jade", ['jade']);
   gulp.watch("./src/**/*.json", ['jade']);
+  gulp.watch("./src/**/*.js", ['js']);
 });
 
 // Compile sass into CSS & auto-inject into browsers
@@ -36,6 +37,12 @@ gulp.task('sass', function() {
   return gulp.src("src/sass/main.sass")
     .pipe(sass())
     .pipe(gulp.dest("public/css"))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('js', function() {
+  return gulp.src("src/js/app.js")
+    .pipe(gulp.dest("public/js"))
     .pipe(browserSync.stream());
 });
 
